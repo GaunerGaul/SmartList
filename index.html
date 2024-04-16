@@ -26,16 +26,40 @@
             text-align: center;
             width: 100%;
         }
+        .director-notes {
+            background-color: #ffcc00;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .director-notes textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        .director-notes button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .director-notes button:hover {
+            background-color: #45a049;
+        }
         .notes-container {
             width: calc(50% - 20px);
-            margin-bottom: 20px;
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .director-notes {
-            background-color: #ffcc00;
+            margin-bottom: 20px;
         }
         .lesson-table {
             width: calc(50% - 20px);
@@ -53,7 +77,7 @@
             clear: both;
         }
         textarea {
-            width: 100%;
+            width: calc(100% - 42px);
             padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ccc;
@@ -72,12 +96,6 @@
         button:hover {
             background-color: #45a049;
         }
-        .note {
-            background-color: #f9f9f9;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-        }
     </style>
 </head>
 <body>
@@ -85,21 +103,18 @@
         <h1>Digital Blackboard</h1>
     </header>
     <main class="container">
+        <section class="director-notes" id="directors-notes">
+            <h2>Director's Note</h2>
+            <textarea id="director-note-input" placeholder="Enter director's note..."></textarea>
+            <button onclick="toggleDirectorNote()">Add Director's Note</button>
+        </section>
         <section class="notes-container" id="teachers-notes">
             <h2>Teacher's Notes</h2>
             <div id="teacher-notes-content">
                 <!-- Teacher's notes will be dynamically added here -->
             </div>
-            <textarea id="teacher-note-input" placeholder="Enter your note..."></textarea>
-            <button onclick="addTeacherNote()">Add Note</button>
-        </section>
-        <section class="notes-container director-notes" id="directors-notes">
-            <h2>Director's Notes</h2>
-            <div id="director-notes-content">
-                <!-- Director's notes will be dynamically added here -->
-            </div>
-            <textarea id="director-note-input" placeholder="Enter your note..."></textarea>
-            <button onclick="addDirectorNote()">Add Note</button>
+            <textarea id="teacher-note-input" placeholder="Enter teacher's note..."></textarea>
+            <button onclick="addTeacherNote()">Add Teacher's Note</button>
         </section>
         <section class="lesson-table">
             <h2>Lesson Table</h2>
@@ -111,7 +126,18 @@
     </footer>
 
     <script>
-        // JavaScript code for note creation
+        function toggleDirectorNote() {
+            var noteTextarea = document.getElementById('director-note-input');
+            var addButton = document.querySelector('#directors-notes button');
+            if (noteTextarea.style.display === 'none' || noteTextarea.style.display === '') {
+                noteTextarea.style.display = 'block';
+                addButton.textContent = 'Hide Director\'s Note';
+            } else {
+                noteTextarea.style.display = 'none';
+                addButton.textContent = 'Add Director\'s Note';
+            }
+        }
+
         function addTeacherNote() {
             var noteInput = document.getElementById('teacher-note-input');
             var noteText = noteInput.value.trim();
@@ -120,18 +146,6 @@
                 noteDiv.textContent = noteText;
                 noteDiv.classList.add('note');
                 document.getElementById('teacher-notes-content').appendChild(noteDiv);
-                noteInput.value = ''; // Clear the input field after adding the note
-            }
-        }
-
-        function addDirectorNote() {
-            var noteInput = document.getElementById('director-note-input');
-            var noteText = noteInput.value.trim();
-            if (noteText !== '') {
-                var noteDiv = document.createElement('div');
-                noteDiv.textContent = noteText;
-                noteDiv.classList.add('note');
-                document.getElementById('director-notes-content').appendChild(noteDiv);
                 noteInput.value = ''; // Clear the input field after adding the note
             }
         }
