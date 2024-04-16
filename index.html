@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Blackboard</title>
     <style>
-                body {
+        body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -22,7 +22,7 @@
         header {
             background-color: #333;
             color: #fff;
-            padding: 10px;
+            padding: 20px;
             text-align: center;
             width: 100%;
         }
@@ -32,6 +32,7 @@
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         .director-notes {
             background-color: #ffcc00;
@@ -41,14 +42,41 @@
             background-color: #fff;
             padding: 20px;
             border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         footer {
             background-color: #333;
             color: #fff;
-            padding: 10px;
+            padding: 20px;
             text-align: center;
             width: 100%;
             clear: both;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .note {
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -90,6 +118,7 @@
             if (noteText !== '') {
                 var noteDiv = document.createElement('div');
                 noteDiv.textContent = noteText;
+                noteDiv.classList.add('note');
                 document.getElementById('teacher-notes-content').appendChild(noteDiv);
                 noteInput.value = ''; // Clear the input field after adding the note
             }
@@ -101,6 +130,7 @@
             if (noteText !== '') {
                 var noteDiv = document.createElement('div');
                 noteDiv.textContent = noteText;
+                noteDiv.classList.add('note');
                 document.getElementById('director-notes-content').appendChild(noteDiv);
                 noteInput.value = ''; // Clear the input field after adding the note
             }
