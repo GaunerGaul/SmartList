@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Blackboard</title>
     <style>
-        body {
+                body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
@@ -57,13 +57,21 @@
         <h1>Digital Blackboard</h1>
     </header>
     <main class="container">
-        <section class="notes-container">
+        <section class="notes-container" id="teachers-notes">
             <h2>Teacher's Notes</h2>
-            <!-- Content for teacher's notes will go here -->
+            <div id="teacher-notes-content">
+                <!-- Teacher's notes will be dynamically added here -->
+            </div>
+            <textarea id="teacher-note-input" placeholder="Enter your note..."></textarea>
+            <button onclick="addTeacherNote()">Add Note</button>
         </section>
-        <section class="notes-container director-notes">
+        <section class="notes-container director-notes" id="directors-notes">
             <h2>Director's Notes</h2>
-            <!-- Content for director's notes will go here -->
+            <div id="director-notes-content">
+                <!-- Director's notes will be dynamically added here -->
+            </div>
+            <textarea id="director-note-input" placeholder="Enter your note..."></textarea>
+            <button onclick="addDirectorNote()">Add Note</button>
         </section>
         <section class="lesson-table">
             <h2>Lesson Table</h2>
@@ -73,5 +81,30 @@
     <footer>
         <p>&copy; 2024 Digital Blackboard. All rights reserved.</p>
     </footer>
+
+    <script>
+        // JavaScript code for note creation
+        function addTeacherNote() {
+            var noteInput = document.getElementById('teacher-note-input');
+            var noteText = noteInput.value.trim();
+            if (noteText !== '') {
+                var noteDiv = document.createElement('div');
+                noteDiv.textContent = noteText;
+                document.getElementById('teacher-notes-content').appendChild(noteDiv);
+                noteInput.value = ''; // Clear the input field after adding the note
+            }
+        }
+
+        function addDirectorNote() {
+            var noteInput = document.getElementById('director-note-input');
+            var noteText = noteInput.value.trim();
+            if (noteText !== '') {
+                var noteDiv = document.createElement('div');
+                noteDiv.textContent = noteText;
+                document.getElementById('director-notes-content').appendChild(noteDiv);
+                noteInput.value = ''; // Clear the input field after adding the note
+            }
+        }
+    </script>
 </body>
 </html>
