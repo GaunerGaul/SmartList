@@ -1,136 +1,142 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital Blackboard</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f3f3f3;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-        header {
-            background-color: #0000ff;
-            color: #fff;
-            padding: 20px;
-            text-align: left;
-            width: 100%;
-        }
-        .director-notes textarea {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            resize: vertical;
-        }
-        .director-notes button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .director-notes button:hover {
-            background-color: #45a049;
-        }
-        .notes-container {
-            width: calc(50% - 20px);
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-        .lesson-table {
-            width: calc(50% - 20px);
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        textarea {
-            width: calc(100% - 42px);
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            resize: vertical;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-    </style>
+<title><?php echo $title; ?></title>
+<style type="text/css">
+<!--
+div#notice {
+position: absolute;
+top: 0;
+right: 0;
+color: #FF0000;
+font-weight: bold;
+}
+-->
+</style>
 </head>
+
 <body>
-    <header>
-        <h1> Digital Blackboard</h1>
-    </header>
-    <main class="container">
-        <section class="header" id="directors-notes">
-            <h2>Director's Note</h2>
-            <textarea id="director-note-input" placeholder="Enter director's note..."></textarea>
-            <button onclick="toggleDirectorNote()">Add Director's Note</button>
-        </section>
-        <section class="notes-container" id="teachers-notes">
-            <h2>Teacher's Notes</h2>
-            <div id="teacher-notes-content">
-                <!-- Teacher's notes will be dynamically added here -->
-            </div>
-            <textarea id="teacher-note-input" placeholder="Erstelle einen Eintrag"></textarea>
-            <button onclick="addTeacherNote()">Hinzufügen</button>
-        </section>
-        <section class="lesson-table">
-            <h2>Vertretungsplan</h2>
-            <!-- Content for lesson table will go here -->
-        </section>
-    </main>
 
-    <script>
-        function toggleDirectorNote() {
-            var noteTextarea = document.getElementById('director-note-input');
-            var addButton = document.querySelector('#directors-notes button');
-            if (noteTextarea.style.display === 'none' || noteTextarea.style.display === '') {
-                noteTextarea.style.display = 'block';
-                addButton.textContent = 'Hide Director\'s Note';
-            } else {
-                noteTextarea.style.display = 'none';
-                addButton.textContent = 'Add Director\'s Note';
-            }
-        }
+<?php
 
-        function addTeacherNote() {
-            var noteInput = document.getElementById('teacher-note-input');
-            var noteText = noteInput.value.trim();
-            if (noteText !== '') {
-                var noteDiv = document.createElement('div');
-                noteDiv.textContent = noteText;
-                noteDiv.classList.add('note');
-                document.getElementById('teacher-notes-content').appendChild(noteDiv);
-                noteInput.value = ''; // Clear the input field after adding the note
-            }
-        }
-    </script>
+echo "<h1>".$title."</h1>\n";
+
+// ggf. Meldung ausgeben
+if($_SESSION != "")
+echo "<div id=\"notice\">".$_SESSION."</div>\n";
+unset($_SESSION);
+
+// Wenn Datei nicht existiert, dann erstellen
+if(!file_exists($source))
+{
+$handle = fopen($source,'w');
+fclose($handle);
+}
+
+// Einträge aus Datei in Array lesen
+$handle = fopen($source,'r');
+$g = array();
+while(!feof($handle))
+$g[] = fgets($handle);
+fclose($handle);
+
+// Array sortieren
+rsort($g,SORT_STRING);
+
+// Array formatiert ausgeben
+$i = 0;
+foreach($g AS $entry)
+{
+if($entry != "")
+{
+$sa = explode("||",$entry);
+echo date("d",$sa[0]).". ".monat(date("m",$sa[0]))." ".date("Y, H:i:s",$sa[0]).": "
+.$sa[1]." schreibt:<br>".$sa[2]."<a href=\"delete.php?i=$i\">Löschen</a><br><br>\n";
+$i++;
+}
+}
+
+// Formular für neue Einträge
+echo "<form action=\"create.php\" method=\"post\">
+Name: <input name=\"name\"><br>
+Text: <textarea name=\"text\" rows=\"5\" cols=\"20\"></textarea><br>
+<input type=\"submit\" value=\"Daten senden\"></form>\n";
+
+?>
 </body>
+
 </html>
+[/PHP]
+
+create.php:
+[PHP]<?php
+session_start();
+require 'const.php';
+$date = time();
+$name = $_POST;
+$text = $_POST;
+
+$string = $date."||".$name."||".$text."\n";
+$handle = fopen($source,'a');
+fputs($handle,$string);
+fclose($handle);
+$_SESSION = "Daten eingetragen.";
+header("Location: index.php");
+
+?>[/PHP]
+
+delete.php:
+[PHP]<?php
+session_start();
+require 'const.php';
+$i = $_GET;
+$a = 0;
+
+$handle = fopen($source,'r');
+
+if(!file_exists($source.".tmp"))
+$handletmp = fopen($source.".tmp",'w');
+
+$g = array();
+
+while(!feof($handle))
+{
+$string = fgets($handle);
+if($string != "")
+$g[] = $string;
+}
+
+rsort($g);
+
+foreach($g AS $string)
+{
+if($a != $i)
+fputs($handletmp,$string);
+$a++;
+}
+
+fclose($handle);
+fclose($handletmp);
+
+unlink($source);
+rename($source.".tmp",$source);
+
+$_SESSION = "Eintrag gelöscht.";
+header("Location: index.php");
+
+?>[/PHP]
+
+const.php:
+[PHP]<?php
+$source = "brett.txt";
+$title = "Mein schwarzes Brett";
+
+
+function monat($i) {
+$a = array("Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember");
+return $a[$i-1];
+}
+
+?>[/PHP]
